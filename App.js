@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
   View,
+  TouchableOpacity,
 } from "react-native";
 
 export default function App() {
@@ -53,20 +54,31 @@ export default function App() {
     loadData();
   }, []);
 
+  const renderSeparator = () => {
+    return <View style={styles.separator} />;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headline}>
-        <Text style={styles.headlineText}>Nu gör vi en lista!</Text>
-        <Text style={styles.undertext}>
-          Skriv i rutan så läggs de till i listan!
-        </Text>
+        <Text style={styles.headlineText}> </Text>
       </View>
 
       <View style={styles.listView}>
         <FlatList
           data={dataArray}
-          renderItem={({ item }) => <Text style={styles.listText}>{item}</Text>}
+          renderItem={({ item, index }) => (
+            <View style={styles.listItem}>
+              <Text style={styles.listText}>{item}</Text>
+              <Button
+                title="Remove"
+                color="red"
+                onPress={() => handleRemoveItem(index)}
+              />
+            </View>
+          )}
           keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={renderSeparator}
         />
       </View>
 
@@ -76,14 +88,13 @@ export default function App() {
             style={styles.input}
             onChangeText={(text) => setInputText(text)}
             value={inputText}
-            placeholder="Skriv här"
+            placeholder="Kom ihåg"
             keyboardType="default"
           />
         </View>
       </KeyboardAwareScrollView>
       <View style={styles.buttonRow}>
-        <Button title="Ta bort" color="red" onPress={handleRemoveItem} />
-        <Button title="Lägg till" color="blue" onPress={handleAddText} />
+        <Button title="Lägg till" color="black" onPress={handleAddText} />
       </View>
 
       <StatusBar style="auto" />
@@ -94,7 +105,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "lightgreen",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -105,21 +116,20 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headlineText: {
-    fontSize: 40,
-  },
-  undertext: {
-    fontSize: 20,
-    padding: 5,
+    fontSize: 30,
+    fontWeight: "bold",
   },
   listView: {
     flex: 4,
     paddingTop: 60,
-    justifyContent: "center",
-    backgroundColor: "#9df5ab",
+    //justifyContent: "center",
+    backgroundColor: "white",
     width: 300,
     borderRadius: 35,
-    alignItems: "center",
+    //alignItems: "center",
     borderWidth: 1,
+    shadowRadius: 10,
+    shadowOpacity: 10,
   },
   listText: {
     fontSize: 20,
@@ -131,17 +141,26 @@ const styles = StyleSheet.create({
     width: 250,
     height: 50,
     margin: 20,
-    borderWidth: 3,
+    borderWidth: 1,
     padding: 10,
-    backgroundColor: "#c9f5d0",
+    backgroundColor: "white",
     borderRadius: 10,
+    shadowColor: "black",
+    shadowRadius: 10,
+    shadowOpacity: 10,
   },
   buttonRow: {
     flexDirection: "row",
   },
-  inputContainer: {
-    flex: 1,
+  separator: {
+    height: 1,
+    width: "100%",
+    backgroundColor: "black",
+  },
+  listItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
+    padding: 10,
   },
 });
